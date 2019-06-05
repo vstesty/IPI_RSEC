@@ -1,0 +1,45 @@
+﻿@model RaportsViewModel
+@{ ViewData["Title"] = "See your raports"; }
+
+
+
+<ul class="navbar-nav flex-grow-1">
+    @await Html.PartialAsync("_SelectRaportActionsPartial")
+</ul>
+
+<div class="panel panel-default raport-panel">
+
+    <div class="panel-heading">
+        @ViewData["Title"]
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <!--<td> &#x2714; </td>-->
+                <td> The date the charge started </td>
+                <td> Bus Number </td>
+                <td> Energy Consumed [kWh]</td>
+                <td> Charging Time [s] </td>
+                <td> Charging Power </td>
+            </tr>
+        </thead>
+
+        @foreach (var raport in Model.Raports)
+        {
+            <tr>
+                <!--<td><input type = "checkbox" class = "done-checkbox"> </td> -->
+                <td> @raport.StartChargingTime </td>
+                <td> @raport.BusNumber </td>
+                <td> @raport.EnergyConsumed </td>
+                <td> @raport.ChargingTime </td>
+                <td> @raport.ChargingPower </td>
+            </tr>
+        }
+    </table>
+
+    <div class="panel-footer add-raport-form">
+        <!-- Add raport form -->
+        <div class="panel-footer add-raport-form"> @await Html.PartialAsync("AddRaportPartial", new Raport()) </div>
+    </div>
+</div>

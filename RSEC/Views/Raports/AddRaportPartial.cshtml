@@ -1,0 +1,25 @@
+﻿@model Raport
+    <label>Add new raport:</label>
+    <form asp-action="AddRaport" method="POST">
+        <table style="width:100%">
+            <tr>
+                <th><label asp-for="BusNumber"> Bus number: </label></th>
+                <th><input asp-for="BusNumber"></th>
+            </tr>
+            <tr>
+                <th><label asp-for="ChargingPower"> Charging power: </label></th>
+                <th><input asp-for="ChargingPower"></th>
+            </tr>
+            <tr>
+                <th><label asp-for="ChargingTime"> Charging time: </label></th>
+                <th><input asp-for="ChargingTime"></th>
+            </tr>
+            <tr>
+                <th><label asp-for="EnergyConsumed"> Energy consumed: </label></th>
+                <th><input asp-for="EnergyConsumed"></th>
+            </tr>
+            </table>
+
+            <button type="submit"> Add </button>
+</form>
+

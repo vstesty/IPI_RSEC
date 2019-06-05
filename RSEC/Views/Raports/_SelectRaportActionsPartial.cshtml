@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using RSEC.Models
+@model RaportsViewModel
+
+    <form asp-action="Index"  method="POST">@*method="get">*@
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
+            <ul class="nav navbar-nav navbar-right">
+                @*<li><a asp-controller="ManageUsers" asp-action="Index">Manage users TSET</a></li>*@
+                <li>                    
+                    Bus number: @Html.DropDownList("busNum", Model.BusList)
+                </li>
+
+                <li>
+                    Start date: <input class="datefield" data-val="true" data-val-required="Date is required"
+                                       id="ReleaseDate" name="startDate" type="date" value="1/11/1989" /> 
+                </li>
+
+                <li>
+                    End date: <input class="datefield" data-val="true" data-val-required="Date is required"
+                                     id="ReleaseDate2" name="endDate" type="date" value="1/11/1989"/>
+                </li>
+
+                <li>
+                    <button type="submit" name="documentType" value="Raport"> Filter </button>
+                </li>
+                <li>
+                    <button type="submit" name="documentType" value="Chart" asp-controller="Chart"> Show raport </button>
+                    @*<button type="button" onclick="location.href='@Url.Action("Index", "Chart", busNum,startDate,endDate)'"> Show raport</button>*@
+                    @*<button type="button" onclick="location.href='@Url.Action("Index", "Chart", new { BusNum = this. form1.  $_POST["busNum"], Html FilterDataForm.busNum, StartDate="startDate",EndDate="endDate" })'"> Show raport</button>*@
+                </li>
+
+            </ul>
+        </nav>
+
+    </form>
