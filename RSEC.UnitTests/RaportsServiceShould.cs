@@ -44,8 +44,7 @@ namespace RSEC.UnitTests
             {
                 Assert.Equal(1, await inMemoryContext.Raports.CountAsync());
 
-                var item = await inMemoryContext.Raports.FirstAsync();
-                Assert.Equal(Guid.Parse("0f8fad5b-d9cb-469f-a165-70867728950e"), item.Id);
+                var item = await inMemoryContext.Raports.FirstAsync();                
                 Assert.Equal("TestingNumber", item.BusNumber);
                 Assert.Equal(999, item.EnergyConsumed);
                 Assert.Equal(100.ToString(), item.ChargingTime.ToString());

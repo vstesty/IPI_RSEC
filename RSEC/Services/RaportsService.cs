@@ -24,8 +24,7 @@ namespace RSEC.Services
         /// </summary>
         /// <returns>total energy consumeded by the charger</returns>
         public async Task<double> GetTotalEnergy()
-        {
-            
+        {            
             double resoult = 0;
             var raports = await _context.Raports.ToListAsync();
             foreach (Raport raport in raports)

@@ -29,18 +29,25 @@ namespace RSEC.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
                 return Challenge();
+            RaportsViewModel model = null;
+            try
+            {
+                // Get raports from database
+                var raports = await _raportsService.GetSelectedRaportsAsync(busNum, startDate, endDate);
 
-            // Get raports from database
-            var raports = await _raportsService.GetSelectedRaportsAsync(busNum, startDate, endDate);
+                // Get bus list from database
+                List<SelectListItem> busList = new List<SelectListItem>();
+                busList = await _raportsService.GetBusListAsync();
 
-            // Get bus list from database
-            List<SelectListItem> busList = new List<SelectListItem>(); 
-            busList = await _raportsService.GetBusListAsync();
-                                           
-            // Put data into a model 
-            var model = new RaportsViewModel() { Raports = raports, BusList = busList};
-            // Render view using the model 
-            return View(model);
+                // Put data into a model 
+                model = new RaportsViewModel() { Raports = raports, BusList = busList };
+            }
+            catch (Exception e) { Logs.sendLog(e); }
+            //Render view using the model
+            if (model != null)
+                return View(model);
+            else
+                return BadRequest("Could not find raport.");
         }
 
         

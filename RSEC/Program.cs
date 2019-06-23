@@ -14,7 +14,7 @@ namespace RSEC
     public class Program
     {
         public static void Main(string[] args)
-        {
+        {            
             //CreateWebHostBuilder(args).Build().Run();
             var host = BuildWebHost(args);
             InitializeDatabase(host);

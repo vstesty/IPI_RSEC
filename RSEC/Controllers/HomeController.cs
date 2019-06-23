@@ -7,11 +7,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RSEC.Models;
 using RSEC.Services;
+using log4net;
+using log4net.Config;
+using System.IO;
 
 namespace RSEC.Controllers
 {
     public class HomeController : Controller
     {
+        //private static log4net.ILog Log { get; set; }
+        //ILog log = log4net.LogManager.GetLogger(typeof(HomeController));
+        //log4net.Config.XmlConfigurator(ConfigFile = 
+        //        "MyStandardLog4Net.config", Watch = true)//log4net.Config.XmlConfigurator Configure(new FileInfo(Server.MapPath("~/log4net.txt")));
+
+
         //dependency injection
         private readonly IRaportsService _raportsService;
         private readonly UserManager<IdentityUser> _userManager;
@@ -30,7 +39,8 @@ namespace RSEC.Controllers
         /// <returns>total energy consumed</returns>
         public async Task<IActionResult> Index()
         {
-            ViewBag.TotalEnergy = await _raportsService.GetTotalEnergy();
+            try { ViewBag.TotalEnergy = await _raportsService.GetTotalEnergy(); }
+            catch (Exception e) { Logs.sendLog(e); }
             return View();
         }
 

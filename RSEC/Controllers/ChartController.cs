@@ -33,86 +33,90 @@ namespace RSEC.Controllers
             if (currentUser == null)
                 return Challenge();
 
+            try
+            {
+                // Get raports from database
+                var raports = await _raportsService.GetSelectedRaportsAsync(busNum, startDate, endDate);
+
+                // Check date range
+                TimeSpan dateRange = endDate - startDate;
+
+                //Prepare chart
+                List<DataPoint> dataPoints = new List<DataPoint>();
+                int counter = 1;
+
+                // One day raport
+                if (dateRange.Days == 0)
+                {
+                    foreach (Raport Data in raports)
+                    {
+                        dataPoints.Add(new DataPoint(counter, Data.EnergyConsumed, Data.BusNumber));
+                        counter++;
+                    }
+
+                }
+
+                // One month raport
+                else if (dateRange.Days <= 31)
+                {
+
+
+                    Dictionary<string, double> timeDictionary = new Dictionary<string, double>();
+
+                    foreach (Raport Data in raports)
+                    {
+                        if (timeDictionary.ContainsKey(Data.StartChargingTime.Date.ToString("dd/MM/yyyy")))
+                        {
+
+                            timeDictionary[Data.StartChargingTime.Date.ToString("dd/MM/yyyy")] += Data.EnergyConsumed;
+                        }
+                        else
+                        {
+                            timeDictionary.Add(Data.StartChargingTime.Date.ToString("dd/MM/yyyy"), Data.EnergyConsumed);
+                        }
+
+                    }
+
+                    foreach (var data in timeDictionary)
+                    {
+                        dataPoints.Add(new DataPoint(counter, data.Value, data.Key));
+                        counter++;
+                    }
+
+                }
+                //one year raport
+                else if (dateRange.Days > 31)
+                {
+                    Dictionary<string, double> timeDictionary = new Dictionary<string, double>();
+
+                    foreach (Raport Data in raports)
+                    {
+                        if (timeDictionary.ContainsKey(Data.StartChargingTime.Year.ToString()))
+                        {
+
+                            timeDictionary[Data.StartChargingTime.Year.ToString()] += Data.EnergyConsumed;
+                        }
+                        else
+                        {
+                            timeDictionary.Add(Data.StartChargingTime.Year.ToString(), Data.EnergyConsumed);
+                        }
+
+                    }
+
+                    foreach (var data in timeDictionary)
+                    {
+                        dataPoints.Add(new DataPoint(counter, data.Value, data.Key));
+                        counter++;
+                    }
+                }
+
             
-            // Get raports from database
-            var raports = await _raportsService.GetSelectedRaportsAsync(busNum, startDate, endDate);
-
-            // Check date range
-            TimeSpan dateRange = endDate - startDate;
-
-            //Prepare chart
-            List<DataPoint> dataPoints = new List<DataPoint>();
-            int counter = 1;
-
-            // One day raport
-            if (dateRange.Days == 0)
-            {
-                foreach (Raport Data in raports)
-                {
-                    dataPoints.Add(new DataPoint(counter,Data.EnergyConsumed,Data.BusNumber));
-                    counter++;
-                }
-                
-            }
-
-            // One month raport
-            else if (dateRange.Days <=31)
-            {
-
-
-                Dictionary<string, double> timeDictionary = new Dictionary<string, double>();
-
-                foreach (Raport Data in raports)
-                {
-                    if (timeDictionary.ContainsKey(Data.StartChargingTime.Date.ToString("dd/MM/yyyy")))
-                    {
-                        
-                        timeDictionary[Data.StartChargingTime.Date.ToString("dd/MM/yyyy")]+=Data.EnergyConsumed;
-                    }
-                    else
-                    {                        
-                        timeDictionary.Add(Data.StartChargingTime.Date.ToString("dd/MM/yyyy"), Data.EnergyConsumed);
-                    }                   
-
-                }
-
-                foreach (var data in timeDictionary)
-                {
-                    dataPoints.Add(new DataPoint(counter,data.Value, data.Key));                    
-                    counter++;
-                }
-
-            }
-            //one year raport
-            else if (dateRange.Days > 31)
-            {
-                Dictionary<string, double> timeDictionary = new Dictionary<string, double>();
-
-                foreach (Raport Data in raports)
-                {
-                    if (timeDictionary.ContainsKey(Data.StartChargingTime.Year.ToString()))
-                    {
-
-                        timeDictionary[Data.StartChargingTime.Year.ToString()] += Data.EnergyConsumed;
-                    }
-                    else
-                    {
-                        timeDictionary.Add(Data.StartChargingTime.Year.ToString(), Data.EnergyConsumed);
-                    }
-
-                }
-
-                foreach (var data in timeDictionary)
-                {
-                    dataPoints.Add(new DataPoint(counter, data.Value, data.Key));
-                    counter++;
-                }
-            }
-
             
+
             // Serialize data for chart component
             ViewBag.DataPoints = JsonConvert.SerializeObject(dataPoints);
-
+            }
+            catch (Exception e) { Logs.sendLog(e); }
 
             return View();
         }            

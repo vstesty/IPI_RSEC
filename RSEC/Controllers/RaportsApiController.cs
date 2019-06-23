@@ -34,9 +34,12 @@ namespace RSEC.Controllers
         [HttpPost]
         public HttpResponseMessage AddRaport(Raport raportApi)
         {
-            _raportsService.AddApiRaport(raportApi);
+            try
+            {
+                _raportsService.AddApiRaport(raportApi);               
+            }
+            catch (Exception e) { Logs.sendLog(e); }
             return new HttpResponseMessage(HttpStatusCode.OK);
-
         }
     }
 }
